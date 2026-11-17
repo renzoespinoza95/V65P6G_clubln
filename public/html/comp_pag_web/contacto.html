@@ -1,0 +1,12 @@
+<section id="contacto" class="py-5 sec-tint">
+  <div class="container text-center">
+    <p class="deco mb-1">Hablemos</p>
+    <h2 class="mb-4">Contáctanos</h2>
+    <div class="row g-3">
+      {{#contactos}}
+      <div class="col-md-6 col-lg-3"><div class="box-dash h-100"><i class="bi {{icono}} fs-2 hl"></i><h6 class="mt-2">{{titulo}}</h6><small>{{contenido}}</small></div></div>
+      {{/contactos}}
+    </div>
+    <a class="btn-v text-decoration-none d-inline-block mt-4" href="{{url_whatsapp}}" target="_blank"><i class="bi bi-whatsapp"></i> Escríbenos por WhatsApp</a>
+  </div>
+</section>

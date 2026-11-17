@@ -1,0 +1,23 @@
+<section id="inicio" class="hero">
+  <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+  <div class="container position-relative">
+    <div class="hero-slides">
+      {{#sliders}}
+      <div class="hero-slide row align-items-center g-4 {{activo}}" data-idx="{{idx}}">
+        <div class="col-lg-6">
+          <p class="deco mb-1">Bienvenido a {{nombre_negocio}}</p>
+          <h1 class="display-4 mb-3">{{titulo_superior}}</h1>
+          <p class="mb-4">{{descripcion}}</p>
+          <a class="btn-v text-decoration-none d-inline-block me-2" href="{{url_whatsapp}}" target="_blank">Pedir ahora</a>
+          <a class="btn-v dark text-decoration-none d-inline-block" href="#" data-bs-toggle="modal" data-bs-target="#modalNosotros">Nosotros</a>
+        </div>
+        <div class="col-lg-6"><img class="hero-img" src="{{img}}" alt="{{titulo_superior}}"></div>
+      </div>
+      {{/sliders}}
+    </div>
+    <div class="hero-ctrl">
+      <button id="hPrev" class="btn-v" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+      <button id="hNext" class="btn-v dark" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+{{> head}}
+<link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body data-api="{{apphost}}" data-logueado="{{logueado}}">
+
+<div class="topbar py-2">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="text-decoration-none" href="{{apphost}}/"><i class="bi bi-arrow-left"></i> Volver al sitio</a>
+    <div class="dropdown">
+      <a class="text-reset text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" href="#"><i class="bi bi-palette"></i> Estilos</a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        {{#estilos}}<li><a class="dropdown-item {{act}}" href="?estilo={{id}}">{{id}} · {{nombre}}</a></li>{{/estilos}}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar sticky-top nav-v">
+  <div class="container">
+    <span class="navbar-brand d-flex align-items-center gap-2 mb-0">
+      <img src="{{logo}}" alt="{{nombre_negocio}}" width="40" height="40" class="rounded-circle"><span class="f-title">{{nombre_negocio}}</span>
+    </span>
+  </div>
+</nav>
+
+<main class="py-5 sec-tint" style="min-height:70vh">
+  <div class="container">
+    <div id="panelReservas" class="{{panel_clase}}">
+      <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+        <div>
+          <p class="deco mb-1">Panel</p>
+          <h2 class="mb-0">Mis <span class="hl">reservas</span></h2>
+        </div>
+        <button type="button" class="btn-v" id="btnActualizar"><i class="bi bi-arrow-clockwise"></i> Actualizar</button>
+      </div>
+      <div class="box-dash">
+        <div class="table-responsive">
+          <table id="tblReservas" class="table table-striped align-middle w-100">
+            <thead>
+              <tr><th>N°</th><th>Nombres y apellidos</th><th>DNI / CE</th><th>Fecha de nacimiento</th><th>Celular</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot py-4">
+  <div class="container"><span>© {{anio}} {{nombre_negocio}}</span></div>
+</footer>
+
+{{> modal_login}}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+<script src="{{assets}}/js/06_misreservas.js?v={{version}}"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<div class="modal fade" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaT" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modalReservaT">Reservaciones</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
+    <div class="modal-body">
+      <img class="reserva-img mb-3" src="{{reserva_img}}" alt="Reservaciones {{nombre_negocio}}">
+      <p class="reserva-txt">{{reserva_texto}}</p>
+      <form id="formReserva" novalidate>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="rsNombres">Nombres y apellidos</label>
+            <input type="text" class="form-control" id="rsNombres" name="nombres_apellidos" maxlength="150" autocomplete="name" required>
+            <div class="invalid-feedback">Ingresa tus nombres y apellidos.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="rsDni">DNI / Carnet de Extranjería</label>
+            <input type="text" class="form-control" id="rsDni" name="dni" maxlength="12" pattern="[0-9A-Za-z]{8,12}" required>
+            <div class="invalid-feedback">Ingresa un DNI (8 dígitos) o carnet válido.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="rsFecha">Fecha de nacimiento</label>
+            <input type="date" class="form-control" id="rsFecha" name="fecha_nacimiento" min="1900-01-01" required>
+            <div class="invalid-feedback">Ingresa una fecha de nacimiento válida.</div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="rsCelular">Celular</label>
+            <input type="tel" class="form-control" id="rsCelular" name="celular" inputmode="numeric" maxlength="9" pattern="[0-9]{9}" autocomplete="tel" required>
+            <div class="invalid-feedback">Ingresa un celular de 9 dígitos.</div>
+          </div>
+        </div>
+        <div id="reservaError" class="alert alert-danger py-2 small mt-3 mb-0 d-none" role="alert"></div>
+        <button type="submit" class="btn-v w-100 mt-3" id="btnReservar">
+          <span class="spinner-border spinner-border-sm d-none me-1" aria-hidden="true"></span>Reservar
+        </button>
+      </form>
+    </div>
+  </div></div>
+</div>

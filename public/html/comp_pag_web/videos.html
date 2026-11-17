@@ -1,0 +1,28 @@
+{{#hay_videos}}
+<section id="videos" class="py-5">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p class="deco mb-1">Revive los momentos</p>
+      <h2>{{nombre_negocio}} <span class="hl">videos</span></h2>
+      <div class="menu-tabs mt-3">
+        {{#video_tabs}}<button type="button" class="tab vtab {{act}}" data-vtab="{{id}}">{{titulo}}</button>{{/video_tabs}}
+      </div>
+    </div>
+    {{#video_tabs}}
+    <div class="row g-4 vpanel {{ocultar}}" data-vpanel="{{id}}">
+      {{#videos}}
+      <div class="col-md-6 col-lg-4">
+        <article class="vid-card">
+          <div class="vid-frame" data-embed="{{embed}}" role="button" tabindex="0" aria-label="Reproducir {{titulo}}">
+            {{#tiene_img}}<img src="{{img}}" alt="{{titulo}}" loading="lazy">{{/tiene_img}}
+            <span class="vid-play"><i class="bi bi-play-fill"></i></span>
+          </div>
+          <div class="prod-info"><h6 class="mb-0">{{titulo}}</h6></div>
+        </article>
+      </div>
+      {{/videos}}
+    </div>
+    {{/video_tabs}}
+  </div>
+</section>
+{{/hay_videos}}

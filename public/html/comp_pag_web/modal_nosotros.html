@@ -1,0 +1,12 @@
+<div class="modal fade" id="modalNosotros" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Sobre {{nombre_negocio}}</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      {{#nosotros}}<h6>{{titulo}}</h6><p>{{contenido}}</p>{{/nosotros}}
+      <h6 class="hl">Misión</h6><p>{{mision}}</p>
+      <h6 class="hl">Visión</h6><p>{{vision}}</p>
+      <h6 class="hl">Valores</h6>
+      <ul>{{#valores}}<li><b>{{titulo}}:</b> {{contenido}}</li>{{/valores}}</ul>
+    </div>
+  </div></div>
+</div>

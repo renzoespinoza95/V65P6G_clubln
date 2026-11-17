@@ -1,0 +1,3 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;800&family=Open+Sans:wght@400;700&family=Lora:wght@400;700&display=swap');
+:root{--bg:#F4F7FC;--p:#173B70;--s:#3977C3;--a:#E9AD4B;--t:#202B3C;--f-title:'Manrope';--f-body:'Open Sans';--f-deco:'Lora';--wt:800}
+.deco{font-style:italic}

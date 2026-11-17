@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700&family=Permanent+Marker&display=swap');
+:root{--bg:#F3F3F3;--p:#171717;--s:#FF5A36;--a:#B8B8B8;--t:#252525;--f-title:'Bebas Neue';--f-body:'Inter';--f-deco:'Permanent Marker';--wt:400}
+.deco,.hl,a{color:#FF5A36}
+.btn-v:not(.dark){background:#FF5A36}
+.tab.active,.tab:hover{color:#FF5A36;border-color:#FF5A36}
