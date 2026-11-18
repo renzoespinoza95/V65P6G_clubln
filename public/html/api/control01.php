@@ -110,13 +110,21 @@ function v65_lista($subcat, $neg_id, $limite, $def = []) {
     return $out;
 }
 
-// Categorías + productos (pivote pos_product_category)
+// Categorías + productos (pivote pos_product_category) y destacados (clave_txt = prod_oferta)
 function v65_menu($neg_id) {
     $cats = DB::query("SELECT category_id, name FROM pos_category WHERE neg_id = %i AND borrado_el IS NULL AND is_activo = 1 ORDER BY priority, category_id LIMIT 6", $neg_id);
     $prods = DB::query("SELECT p.product_id, p.name, p.price, p.description,
         (SELECT img FROM pos_product_image WHERE product_id = p.product_id AND borrado_el IS NULL AND is_visible = 1 ORDER BY orden LIMIT 1) AS img,
         (SELECT GROUP_CONCAT(pc.category_id SEPARATOR ' ') FROM pos_product_category pc WHERE pc.product_id = p.product_id AND pc.borrado_el IS NULL) AS cats
         FROM pos_product p WHERE p.neg_id = %i AND p.borrado_el IS NULL AND p.is_visible = 1 ORDER BY p.product_id LIMIT 12", $neg_id);
+
+    $ofertas = DB::query("SELECT DISTINCT p.product_id, p.name, p.price, p.description,
+        (SELECT img FROM pos_product_image WHERE product_id = p.product_id AND borrado_el IS NULL AND is_visible = 1 ORDER BY orden LIMIT 1) AS img
+        FROM pos_product p
+        INNER JOIN pos_product_category pc ON p.product_id = pc.product_id AND pc.borrado_el IS NULL
+        INNER JOIN pos_category c ON pc.category_id = c.category_id AND c.borrado_el IS NULL AND c.is_activo = 1
+        WHERE p.neg_id = %i AND p.borrado_el IS NULL AND p.is_visible = 1 AND c.clave_txt = %s
+        ORDER BY p.product_id ASC LIMIT 2", $neg_id, 'prod_oferta');
 
     $categorias = [];
     foreach ($cats as $c) $categorias[] = ['id' => $c['category_id'], 'name' => $c['name']];
@@ -130,7 +138,18 @@ function v65_menu($neg_id) {
             'img' => !empty($p['img']) ? $p['img'] : 'https://picsum.photos/seed/v65p' . $p['product_id'] . '/600/800',
         ];
     }
-    return ['categorias' => $categorias, 'productos' => $productos, 'destacados' => array_slice($productos, 0, 2)];
+
+    $destacados = [];
+    foreach ($ofertas as $o) {
+        $destacados[] = [
+            'name' => $o['name'],
+            'description' => mb_strimwidth((string)$o['description'], 0, 120, '…', 'UTF-8'),
+            'precio' => 'S/ ' . number_format($o['price'], 2),
+            'img' => !empty($o['img']) ? $o['img'] : 'https://picsum.photos/seed/v65p' . $o['product_id'] . '/600/800',
+        ];
+    }
+
+    return ['categorias' => $categorias, 'productos' => $productos, 'destacados' => $destacados];
 }
 
 // Galería de catálogo: tabs = reg_item_pag_web de txt_galeria_fotos; contenido = reg_pag_item_img de cada ítem
