@@ -2,15 +2,27 @@
   <div class="container">
     <div class="text-center mb-4">
       <p class="deco mb-1">Nuestro catálogo</p>
-      <h2>{{nombre_negocio}} <span class="hl">productos</span> destacados</h2>
+      <h2>{{nombre_negocio}} <span class="hl">galería</span></h2>
       <div class="menu-tabs mt-3">
-        <button class="tab active" data-filter="all">Todos</button>
-        {{#categorias}}<button class="tab" data-filter="{{id}}">{{name}}</button>{{/categorias}}
+        {{#catalogo_tabs}}<button type="button" class="tab cat-tab {{act}}" data-cattab="{{id}}">{{titulo}}</button>{{/catalogo_tabs}}
       </div>
     </div>
-    <div class="row g-4" id="menuGrid">
-      {{#productos}}{{> item}}{{/productos}}
+    {{#catalogo_tabs}}
+    <div class="row g-4 cat-panel {{ocultar}}" data-catpanel="{{id}}">
+      {{#imagenes}}
+      <div class="col-6 col-md-4 col-lg-3 menu-item">
+        <article class="prod-card">
+          <button type="button" class="prod-img-btn" aria-label="Ver {{name}} en pantalla completa">
+            <img src="{{img}}" alt="{{name}}" loading="lazy">
+          </button>
+          <div class="prod-info">
+            <h6 class="mb-1">{{name}}</h6>
+          </div>
+        </article>
+      </div>
+      {{/imagenes}}
     </div>
-    <p id="menuVacio" class="text-center d-none">No hay productos en esta categoría.</p>
+    {{/catalogo_tabs}}
+    <p id="menuVacio" class="text-center {{#catalogo_tabs}}d-none{{/catalogo_tabs}}">No hay imágenes en el catálogo.</p>
   </div>
 </section>

@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
       <img class="reserva-img mb-3" src="{{reserva_img}}" alt="Reservaciones {{nombre_negocio}}">
-      <p class="reserva-txt">{{reserva_texto}}</p>
+      <p class="reserva-txt">{{{reserva_texto}}}</p>
       <form id="formReserva" novalidate>
         <div class="row g-3">
           <div class="col-12">
@@ -29,9 +29,18 @@
             <input type="tel" class="form-control" id="rsCelular" name="celular" inputmode="numeric" maxlength="9" pattern="[0-9]{9}" autocomplete="tel" required>
             <div class="invalid-feedback">Ingresa un celular de 9 dígitos.</div>
           </div>
+          <div class="col-12">
+            <label class="form-label">Verificación: Selecciona la fruta <b id="captchaObjetivo" data-fruta="{{captcha_fruta_objetivo}}" style="text-transform: capitalize; color: var(--p);">{{captcha_fruta_objetivo}}</b></label>
+            <div class="d-flex gap-2 flex-wrap mt-1" id="captchaFrutasContainer">
+              {{#captcha_opciones}}
+              <button type="button" class="btn btn-outline-secondary btn-sm captcha-btn" data-fruta="{{nombre}}" style="font-size: 1.5rem; padding: 0.2rem 0.6rem;" title="{{nombre}}">{{emoji}}</button>
+              {{/captcha_opciones}}
+            </div>
+            <div id="captchaFeedback" class="small text-danger mt-1 d-none">Selecciona la fruta correcta para continuar.</div>
+          </div>
         </div>
         <div id="reservaError" class="alert alert-danger py-2 small mt-3 mb-0 d-none" role="alert"></div>
-        <button type="submit" class="btn-v w-100 mt-3" id="btnReservar">
+        <button type="submit" class="btn-v w-100 mt-3" id="btnReservar" disabled>
           <span class="spinner-border spinner-border-sm d-none me-1" aria-hidden="true"></span>Reservar
         </button>
       </form>

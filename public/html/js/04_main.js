@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     V65.touchX = null;
   });
 
-  // Tabs del menú
-  document.querySelectorAll('#menu .menu-tabs .tab').forEach(t => t.addEventListener('click', () => v65Filtrar(t.dataset.filter)));
+  // Tabs del catálogo (Galería)
+  document.querySelectorAll('#menu .cat-tab').forEach(t => t.addEventListener('click', () => v65CatTab(t.dataset.cattab)));
 
-  // Galería: clic en la imagen del producto
-  document.getElementById('menuGrid').addEventListener('click', e => {
+  // Galería de catálogo: clic en la imagen del ítem
+  document.getElementById('menu').addEventListener('click', e => {
     const b = e.target.closest('.prod-img-btn');
     if (b) v65GaleriaAbrir(b.closest('.menu-item'));
   });

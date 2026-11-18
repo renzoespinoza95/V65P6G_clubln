@@ -17,12 +17,13 @@ Flight::route('GET /', function () {
     $nombre_negocio = !empty($negocio['nombre']) ? $negocio['nombre'] : 'CocinaPro';
     $img_logo = !empty($negocio['img_logo']) ? $negocio['img_logo'] : 'https://picsum.photos/seed/v65logo/120/120';
     $celular  = isset($negocio['celular_informes']) ? $negocio['celular_informes'] : '';
-    $cel_limpio = preg_replace('/[^0-9]/', '', $celular);
-    if (strlen($cel_limpio) === 9) $cel_limpio = '51' . $cel_limpio;
 
     // ===== SEO / redes / WhatsApp (mismas claves txt_ del proyecto base) =====
     $meta_description = v65_meta('txt_meta_description', $neg_id, 'Equipamiento profesional para cocinas y restaurantes.');
     $meta_keywords    = v65_meta('txt_meta_keywords', $neg_id, 'cocinas industriales, refrigeración, menaje');
+    $telefono_wa      = v65_txt('txt_telefono', $neg_id, 'contenido', $celular);
+    $cel_limpio       = preg_replace('/[^0-9]/', '', $telefono_wa);
+    if (strlen($cel_limpio) === 9) $cel_limpio = '51' . $cel_limpio;
     $msg = v65_txt('txt_whatsapp', $neg_id, 'contenido', "Hola {$nombre_negocio}, los contacto desde su página web.");
     $url_whatsapp = 'https://wa.me/' . $cel_limpio . '?text=' . urlencode($msg);
     $url_tiktok   = v65_txt('txt_tiktok', $neg_id, 'contenido', '#');
@@ -31,6 +32,20 @@ Flight::route('GET /', function () {
 
     // ===== Reservaciones (modal) =====
     $reserva_texto = v65_txt('txt_reservaciones', $neg_id, 'contenido', 'Reserva con anticipación y asegura tu lugar. Déjanos tus datos y nos pondremos en contacto contigo.');
+    $reserva_img   = v65_reserva_imagen($neg_id);
+
+    // ===== Fruta Captcha =====
+    $frutas_disponibles = [
+        ['nombre' => 'manzana', 'emoji' => '🍎'],
+        ['nombre' => 'plátano', 'emoji' => '🍌'],
+        ['nombre' => 'uva', 'emoji' => '🍇'],
+        ['nombre' => 'fresa', 'emoji' => '🍓'],
+        ['nombre' => 'sandía', 'emoji' => '🍉']
+    ];
+    shuffle($frutas_disponibles);
+    $fruta_objetivo = $frutas_disponibles[0];
+    $opciones_captcha = $frutas_disponibles;
+    shuffle($opciones_captcha);
 
     // ===== Nosotros =====
     $nos = DB::queryFirstRow("SELECT i.titulo, i.subtitulo_detalle, i.contenido FROM reg_item_pag_web i
@@ -59,7 +74,6 @@ Flight::route('GET /', function () {
         WHERE s.clave_txt = %s AND c.neg_id = %i ORDER BY i.orden ASC, i.item_pag_web_id ASC LIMIT 6", 'TXT_TOPNAVBAR', $neg_id);
     if ($rows) {
         $nav = array_map(function ($r) use ($apphost) {
-            // "Cotizar" pasa a ser "Reservaciones" y abre el modal
             if (mb_strtolower(trim($r['titulo']), 'UTF-8') === 'cotizar') {
                 return ['titulo' => 'Reservaciones', 'url' => '#', 'modal' => '#modalReserva'];
             }
@@ -76,14 +90,18 @@ Flight::route('GET /', function () {
         ];
     }
 
-    // ===== Productos / listas (lógica en api/control01.php) =====
+    // ===== URL Mapa (contenido de clave_txt = txt_mapa) =====
+    $url_mapa = trim(v65_txt('txt_mapa', $neg_id, 'contenido', ''));
+
+    // ===== Datos de catálogo (Galería de fotos) y auxiliares =====
     $menu = v65_menu($neg_id);
+    $catalogo_tabs = v65_catalogo_galeria($neg_id);
     $videos = v65_videos($neg_id);
     $contactos = [
-        ['icono' => 'bi-geo-alt',  'titulo' => 'Dirección', 'contenido' => v65_txt('txt_direccion', $neg_id, 'contenido', isset($negocio['direccion']) ? $negocio['direccion'] : 'Lima, Perú')],
-        ['icono' => 'bi-telephone', 'titulo' => 'Teléfono',  'contenido' => v65_txt('txt_telefono', $neg_id, 'contenido', $celular)],
-        ['icono' => 'bi-clock',     'titulo' => 'Horario',   'contenido' => v65_txt('txt_horario', $neg_id, 'contenido', 'Lunes a sábado 8:00 a 18:00')],
-        ['icono' => 'bi-envelope',  'titulo' => 'Correo',    'contenido' => v65_txt('txt_email', $neg_id, 'contenido', 'ventas@ejemplo.com')],
+        ['icono' => 'bi-geo-alt',  'titulo' => 'Dirección', 'contenido' => v65_txt('txt_direccion', $neg_id, 'contenido', isset($negocio['direccion']) ? $negocio['direccion'] : 'Lima, Perú'), 'url_boton' => $url_mapa, 'texto_boton' => 'Ver ubicación'],
+        ['icono' => 'bi-telephone', 'titulo' => 'Teléfono',  'contenido' => $telefono_wa, 'url_boton' => '', 'texto_boton' => ''],
+        ['icono' => 'bi-clock',     'titulo' => 'Horario',   'contenido' => v65_txt('txt_horario', $neg_id, 'contenido', 'Lunes a sábado 8:00 a 18:00'), 'url_boton' => '', 'texto_boton' => ''],
+        ['icono' => 'bi-envelope',  'titulo' => 'Correo',    'contenido' => v65_txt('txt_email', $neg_id, 'contenido', 'ventas@ejemplo.com'), 'url_boton' => '', 'texto_boton' => ''],
     ];
 
     $data = [
@@ -92,11 +110,14 @@ Flight::route('GET /', function () {
         'estilos' => v65_lista_estilos($estilo),
         'meta_description' => $meta_description, 'meta_keywords' => $meta_keywords,
         'nombre_negocio' => $nombre_negocio, 'nombre_dueno' => $nombre_dueno,
-        'celular' => $celular, 'url_whatsapp' => $url_whatsapp, 'url_tiktok' => $url_tiktok, 'url_facebook' => $url_facebook,
+        'celular' => $telefono_wa, 'url_whatsapp' => $url_whatsapp, 'url_tiktok' => $url_tiktok, 'url_facebook' => $url_facebook,
         'direccion' => $contactos[0]['contenido'], 'horario' => $contactos[2]['contenido'],
         'anio' => date('Y'), 'visitas' => perso::obtener_visitas(),
         'nav' => $nav, 'sliders' => $sliders, 'nosotros' => $nos,
-        'reserva_img' => 'https://barsi-img.b-cdn.net/regx/8ucqev.png', 'reserva_texto' => $reserva_texto,
+        'reserva_img' => $reserva_img, 'reserva_texto' => $reserva_texto,
+        'captcha_fruta_objetivo' => $fruta_objetivo['nombre'],
+        'captcha_fruta_emoji' => $fruta_objetivo['emoji'],
+        'captcha_opciones' => $opciones_captcha,
         'beneficios' => v65_lista('txt_marquesina', $neg_id, 3, [
             ['titulo' => 'Pide tu equipo', 'contenido' => 'Envíos a todo el Perú'],
             ['titulo' => 'Entrega o recojo', 'contenido' => 'Despacho rápido a tu local'],
@@ -108,7 +129,8 @@ Flight::route('GET /', function () {
         'vision' => v65_txt('txt_vision', $neg_id, 'contenido', 'Ser líderes en equipamiento gastronómico.'),
         'valores' => v65_lista('txt_valores', $neg_id, 4, [['titulo' => 'Calidad', 'contenido' => 'Acero certificado']]),
         'clientes' => v65_lista('txt_testimonios', $neg_id, 6, [['titulo' => 'Cliente', 'subtitulo' => 'Propietario', 'contenido' => 'Excelente servicio.']]),
-        'categorias' => $menu['categorias'], 'productos' => $menu['productos'], 'destacados' => $menu['destacados'],
+        'destacados' => $menu['destacados'],
+        'catalogo_tabs' => $catalogo_tabs,
         'hay_videos' => !empty($videos), 'video_tabs' => $videos,
         'contactos' => $contactos,
     ];
@@ -126,7 +148,13 @@ Flight::route('GET /', function () {
 Flight::route('POST /BGYHC6/realizarReserva', function () {
     include DEFINITION;
 
-    list($d, $error) = v65_validar_reserva(v65_body());
+    $b = v65_body();
+    if (!isset($b['captcha_valido']) || $b['captcha_valido'] !== true) {
+        Flight::json(['ok' => false, 'msg' => 'Por favor completa el captcha seleccionando la fruta correcta.'], 422);
+        return;
+    }
+
+    list($d, $error) = v65_validar_reserva($b);
     if ($error !== '') {
         Flight::json(['ok' => false, 'msg' => $error], 422);
         return;

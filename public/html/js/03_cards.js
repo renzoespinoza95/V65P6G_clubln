@@ -1,4 +1,4 @@
-// Manejo de tarjetas: hero (carrusel infinito), filtro del menú, galería y videos
+// Manejo de tarjetas: hero (carrusel infinito), tabs del catálogo, galería y videos
 function v65Mostrar(i) {
   const slides = document.querySelectorAll('.hero-slide');
   V65.total = slides.length;
@@ -7,17 +7,12 @@ function v65Mostrar(i) {
   slides.forEach((s, k) => s.classList.toggle('active', k === V65.idx));
 }
 
-function v65Filtrar(f) {
-  V65.filtro = f;
-  document.querySelectorAll('#menu .menu-tabs .tab').forEach(t => t.classList.toggle('active', t.dataset.filter === f));
-  document.querySelectorAll('#menuGrid .menu-item').forEach(el => {
-    const ids = el.dataset.cats.split(' ');
-    el.classList.toggle('d-none', f !== 'all' && !ids.includes(f));
-  });
-  v65Vacio();
+function v65CatTab(id) {
+  document.querySelectorAll('#menu .cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cattab === id));
+  document.querySelectorAll('#menu .cat-panel').forEach(p => p.classList.toggle('d-none', p.dataset.catpanel !== id));
 }
 
-// ===== Galería a pantalla completa (productos visibles) =====
+// ===== Galería a pantalla completa (imágenes visibles del panel activo) =====
 function v65GaleriaVer(i) {
   const n = V65.galItems.length;
   if (!n) return;
@@ -32,7 +27,8 @@ function v65GaleriaVer(i) {
 }
 
 function v65GaleriaAbrir(card) {
-  const visibles = Array.from(document.querySelectorAll('#menuGrid .menu-item:not(.d-none)'));
+  const activePanel = document.querySelector('#menu .cat-panel:not(.d-none)');
+  const visibles = activePanel ? Array.from(activePanel.querySelectorAll('.menu-item')) : [];
   V65.galItems = visibles.map(el => ({
     src: el.querySelector('img').getAttribute('src'),
     name: (el.querySelector('h6') || {}).textContent || ''

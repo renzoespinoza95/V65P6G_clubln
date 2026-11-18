@@ -1,13 +1,7 @@
 <div class="topbar d-none d-md-block py-2">
   <div class="container d-flex justify-content-between">
     <span><i class="bi bi-geo-alt hl"></i> {{direccion}}</span>
-    <span><i class="bi bi-telephone hl"></i> {{celular}}</span>
-    <div class="dropdown">
-      <a class="text-reset text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" href="#"><i class="bi bi-palette"></i> Estilos</a>
-      <ul class="dropdown-menu dropdown-menu-end">
-        {{#estilos}}<li><a class="dropdown-item {{act}}" href="?estilo={{id}}">{{id}} · {{nombre}}</a></li>{{/estilos}}
-      </ul>
-    </div>
+    <span><i class="bi bi-telephone hl"></i> {{celular}}</span>    
   </div>
 </div>
 <nav class="navbar navbar-expand-lg sticky-top nav-v">
@@ -22,7 +16,6 @@
         <ul class="navbar-nav ms-auto gap-lg-3">
           {{#nav}}<li class="nav-item"><a class="nav-link" href="{{url}}" {{#modal}}data-bs-toggle="modal" data-bs-target="{{modal}}"{{/modal}}>{{titulo}}</a></li>{{/nav}}
         </ul>
-        <button type="button" class="btn-v ms-lg-4 mt-3 mt-lg-0" data-bs-toggle="modal" data-bs-target="#modalReserva">Reservaciones</button>
       </div>
     </div>
   </div>

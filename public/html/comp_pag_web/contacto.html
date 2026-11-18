@@ -4,7 +4,7 @@
     <h2 class="mb-4">Contáctanos</h2>
     <div class="row g-3">
       {{#contactos}}
-      <div class="col-md-6 col-lg-3"><div class="box-dash h-100"><i class="bi {{icono}} fs-2 hl"></i><h6 class="mt-2">{{titulo}}</h6><small>{{contenido}}</small></div></div>
+      <div class="col-md-6 col-lg-3"><div class="box-dash h-100"><i class="bi {{icono}} fs-2 hl"></i><h6 class="mt-2">{{titulo}}</h6><small class="d-block">{{contenido}}</small>{{#url_boton}}<a class="btn-v text-decoration-none d-inline-block mt-3" href="{{url_boton}}" target="_blank" rel="noopener">{{texto_boton}}</a>{{/url_boton}}</div></div>
       {{/contactos}}
     </div>
     <a class="btn-v text-decoration-none d-inline-block mt-4" href="{{url_whatsapp}}" target="_blank"><i class="bi bi-whatsapp"></i> Escríbenos por WhatsApp</a>

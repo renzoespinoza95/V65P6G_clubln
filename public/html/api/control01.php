@@ -76,6 +76,17 @@ function v65_meta($clave, $neg_id, $def) {
     return v65_txt($clave, $neg_id, 'contenido', $def);
 }
 
+// Imagen del ítem de reservaciones
+function v65_reserva_imagen($neg_id, $def = 'https://barsi-img.b-cdn.net/regx/8ucqev.png') {
+    $r = DB::queryFirstRow("SELECT img.url_img FROM reg_pag_item_img img
+        INNER JOIN reg_item_pag_web i ON img.item_pag_web_id = i.item_pag_web_id
+        INNER JOIN reg_subcat_pag_web s ON i.subcat_pag_web_id = s.subcat_pag_web_id
+        INNER JOIN reg_cat_pag_web c ON s.cat_pag_web_id = c.cat_pag_web_id
+        WHERE i.clave_txt = 'txt_reservaciones' AND c.neg_id = %i AND img.is_visible = 1
+        ORDER BY img.orden ASC, img.pag_item_img_id ASC LIMIT 1", $neg_id);
+    return ($r && !empty($r['url_img'])) ? $r['url_img'] : $def;
+}
+
 // Ítems de una subcategoría (por clave_txt) con su primera imagen
 function v65_lista($subcat, $neg_id, $limite, $def = []) {
     $rows = DB::query("SELECT i.item_pag_web_id, i.titulo, i.subtitulo_detalle, i.contenido,
@@ -120,6 +131,38 @@ function v65_menu($neg_id) {
         ];
     }
     return ['categorias' => $categorias, 'productos' => $productos, 'destacados' => array_slice($productos, 0, 2)];
+}
+
+// Galería de catálogo: tabs = reg_item_pag_web de txt_galeria_fotos; contenido = reg_pag_item_img de cada ítem
+function v65_catalogo_galeria($neg_id) {
+    $items = DB::query("SELECT i.item_pag_web_id, i.titulo FROM reg_item_pag_web i
+        INNER JOIN reg_subcat_pag_web s ON i.subcat_pag_web_id = s.subcat_pag_web_id
+        INNER JOIN reg_cat_pag_web c ON s.cat_pag_web_id = c.cat_pag_web_id
+        WHERE s.clave_txt = %s AND c.neg_id = %i AND i.is_visible = 1 AND i.borrado_el IS NULL
+        ORDER BY i.orden ASC, i.item_pag_web_id ASC", 'txt_galeria_fotos', $neg_id);
+
+    $tabs = [];
+    foreach ($items as $it) {
+        $imgs = DB::query("SELECT pag_item_img_id, url_img, orden FROM reg_pag_item_img
+            WHERE item_pag_web_id = %i AND is_visible = 1 ORDER BY orden ASC, pag_item_img_id ASC", $it['item_pag_web_id']);
+        $lista_imgs = [];
+        foreach ($imgs as $v) {
+            if (empty($v['url_img'])) continue;
+            $lista_imgs[] = [
+                'img' => $v['url_img'],
+                'name' => $it['titulo'],
+            ];
+        }
+        if (empty($lista_imgs)) continue;
+        $tabs[] = [
+            'id' => $it['item_pag_web_id'],
+            'titulo' => $it['titulo'],
+            'act' => empty($tabs) ? 'active' : '',
+            'ocultar' => empty($tabs) ? '' : 'd-none',
+            'imagenes' => $lista_imgs,
+        ];
+    }
+    return $tabs;
 }
 
 // URL de Vimeo / YouTube (o código iframe) -> URL embebible. Vacío si no es válida
