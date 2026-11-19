@@ -118,7 +118,7 @@ function v65_menu($neg_id) {
         (SELECT GROUP_CONCAT(pc.category_id SEPARATOR ' ') FROM pos_product_category pc WHERE pc.product_id = p.product_id AND pc.borrado_el IS NULL) AS cats
         FROM pos_product p WHERE p.neg_id = %i AND p.borrado_el IS NULL AND p.is_visible = 1 ORDER BY p.product_id LIMIT 12", $neg_id);
 
-    $ofertas = DB::query("SELECT DISTINCT p.product_id, p.name, p.price, p.description,
+    $ofertas = DB::query("SELECT DISTINCT p.product_id, p.name, p.price, p.description, p.variantes_json,
         (SELECT img FROM pos_product_image WHERE product_id = p.product_id AND borrado_el IS NULL AND is_visible = 1 ORDER BY orden LIMIT 1) AS img
         FROM pos_product p
         INNER JOIN pos_product_category pc ON p.product_id = pc.product_id AND pc.borrado_el IS NULL
@@ -142,8 +142,11 @@ function v65_menu($neg_id) {
     $destacados = [];
     foreach ($ofertas as $o) {
         $destacados[] = [
+            'product_id' => $o['product_id'],
             'name' => $o['name'],
             'description' => mb_strimwidth((string)$o['description'], 0, 120, '…', 'UTF-8'),
+            'descripcion_completa' => (string)$o['description'],
+            'variantes_json' => !empty($o['variantes_json']) ? (string)$o['variantes_json'] : '{}',
             'precio' => 'S/ ' . number_format($o['price'], 2),
             'img' => !empty($o['img']) ? $o['img'] : 'https://picsum.photos/seed/v65p' . $o['product_id'] . '/600/800',
         ];

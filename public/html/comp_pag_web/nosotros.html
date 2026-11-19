@@ -9,7 +9,16 @@
     </div>
     <div class="col-lg-5"><div class="row g-3">
       {{#destacados}}
-      <div class="col-6"><div class="card-dest"><img src="{{img}}" alt="{{name}}"><div class="card-dest-t"><span class="deco">{{name}}</span><b class="d-block">{{precio}}</b></div></div></div>
+      <div class="col-6">
+        <div class="card-dest" role="button" tabindex="0"
+             data-name="{{name}}"
+             data-precio="{{precio}}"
+             data-desc="{{descripcion_completa}}"
+             data-variantes="{{variantes_json}}">
+          <img src="{{img}}" alt="{{name}}">
+          <div class="card-dest-t"><span class="deco">{{name}}</span><b class="d-block">{{precio}}</b></div>
+        </div>
+      </div>
       {{/destacados}}
     </div></div>
   </div></div>

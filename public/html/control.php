@@ -135,7 +135,7 @@ Flight::route('GET /', function () {
         'contactos' => $contactos,
     ];
 
-    $nombres = ['head','navbar_items','hero','beneficios','nosotros','thumbnails','item','videos','servicios','contacto','footer','modal_nosotros','modal_clientes','modal_reserva','modal_reserva_ok','modal_galeria','scripts'];
+    $nombres = ['head','navbar_items','hero','beneficios','nosotros','thumbnails','item','videos','servicios','contacto','footer','modal_nosotros','modal_clientes','modal_reserva','modal_reserva_ok','modal_galeria','modal_producto','scripts'];
     $partials = [];
     foreach ($nombres as $n) $partials[$n] = file_get_contents($vista . '/comp_pag_web/' . $n . '.html');
 
@@ -179,7 +179,7 @@ Flight::route('POST /BGYHC6/realizarReserva', function () {
 });
 
 // ============================================================
-// POST R1W4ry/miUsuario  -> login (reg_usu, usu_id = 3: sobrenombre + clavel)
+// POST R1W4ry/miUsuario  -> login (reg_usu, sobrenombre = 'fenix': sobrenombre + clavel)
 // ============================================================
 Flight::route('POST /R1W4ry/miUsuario', function () {
     include DEFINITION;
@@ -194,7 +194,7 @@ Flight::route('POST /R1W4ry/miUsuario', function () {
         return;
     }
 
-    $u = DB::queryFirstRow("SELECT usu_id, sobrenombre, clavel FROM reg_usu WHERE usu_id = %i AND borrado_el IS NULL LIMIT 1", 3);
+    $u = DB::queryFirstRow("SELECT usu_id, sobrenombre, clavel FROM reg_usu WHERE sobrenombre = %s AND borrado_el IS NULL LIMIT 1", 'fenix');
     $ok = $u && hash_equals((string)$u['sobrenombre'], $usuario) && v65_clave_ok((string)$u['clavel'], $clave);
 
     if (!$ok) {
